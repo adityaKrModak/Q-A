@@ -1,16 +1,73 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import type { GetServerSideProps } from "next";
 import AddQuestionComp from "../components/AddQuestionComp";
 import Layout from "../components/Layout";
+import FeedSkeleton from "../components/FeedSkeleton";
+import { useState } from "react";
 
-const Home: NextPage = () => {
+type FeedDataType = {
+  id: number;
+  question: string;
+  likes: number;
+  comments: number;
+};
+type Props = {
+  feed: FeedDataType[];
+};
+
+const Home = ({ feed }: Props) => {
+  const [FeedData, setFeedData] = useState<FeedDataType[]>(feed);
+  const [askQuestion, setAskQuestionValue] = useState<string>("");
+
+  const onClick = () => {
+    if (askQuestion.length >= 3) {
+      const data: FeedDataType[] = FeedData;
+      data.unshift({
+        id: Math.random(),
+        question: `${askQuestion}`,
+        likes: 0,
+        comments: 0,
+      });
+      setAskQuestionValue("");
+      setFeedData(data);
+    }
+  };
+
   return (
     <Layout>
-      <AddQuestionComp />
+      <AddQuestionComp
+        value={askQuestion}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void =>
+          setAskQuestionValue(e.target.value)
+        }
+        onClick={onClick}
+      />
+      {FeedData.map((Feed: FeedDataType) => (
+        <FeedSkeleton
+          key={Feed.id}
+          question={Feed.question}
+          likes={Feed.likes}
+          comments={Feed.comments}
+        />
+      ))}
     </Layout>
   );
+};
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export const getServerSideProps: GetServerSideProps = async () => {
+  const randomNumber = Math.floor(Math.random() * 20 + 1);
+
+  const feed: FeedDataType[] = [];
+  for (let i = 0; i < randomNumber; i++) {
+    feed.push({
+      id: i,
+      question: `What is Projectile?${i}`,
+      likes: i,
+      comments: i,
+    });
+  }
+  console.log(feed);
+  return { props: { feed } };
 };
 
 export default Home;
