@@ -1,10 +1,17 @@
 import React from "react";
 
-type props = {
+interface props {
   className: string;
   placeholder: string;
-};
-const TextArea: React.FC<props> = ({ className, placeholder }) => {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+export default function TextArea({
+  className,
+  placeholder,
+  value,
+  onChange,
+}: props) {
   return (
     <textarea
       className={`
@@ -17,8 +24,9 @@ const TextArea: React.FC<props> = ({ className, placeholder }) => {
         rounded
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none 
         ${className}`}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
     />
   );
-};
-
-export default TextArea;
+}
