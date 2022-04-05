@@ -2,16 +2,26 @@ import React from "react";
 import Image from "next/image";
 import LikeOutline from "../Common/Icons/likeOutline";
 import Reply from "../Common/Icons/reply";
-import Comment from "../Common/Icons/comment";
+import CommentIcon from "../Common/Icons/commentIcon";
 
-type FeedData = {
+interface FeedData {
+  imgSrc?: string;
+  name?: string;
   question: string;
   likes: number;
   comments: number;
-};
-function FeedSkeleton({ question, likes, comments }: FeedData) {
+  onReplyClick?(): void;
+}
+function FeedSkeleton({
+  name,
+  question,
+  likes,
+  comments,
+  imgSrc,
+  onReplyClick,
+}: FeedData) {
   return (
-    <div className="flex border-solid border-sky-400 border-2  m-2">
+    <div className="flex border-solid border-sky-400 border-2  m-2 ">
       <div id="profilePic" className="m-2">
         <Image
           src="/profile.png"
@@ -29,8 +39,8 @@ function FeedSkeleton({ question, likes, comments }: FeedData) {
         >
           <LikeOutline className="m-2" />
           {likes}
-          <Reply className="m-2" />
-          <Comment className="m-2" />
+          <Reply className="m-2" onClick={onReplyClick} />
+          <CommentIcon className="m-2" />
           {comments}
         </div>
       </div>

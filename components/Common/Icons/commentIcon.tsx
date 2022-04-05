@@ -2,12 +2,13 @@ import React from "react";
 
 type Props = {
   className?: string;
+  onClick?(val: boolean): void;
 };
 const defaults = {
   className: "",
 };
 
-function Comment({ className }: Props) {
+function CommentIcon({ className, onClick }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -24,4 +25,4 @@ function Comment({ className }: Props) {
   );
 }
 
-export default Comment;
+export default CommentIcon;

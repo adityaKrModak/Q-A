@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { GetServerSideProps } from "next";
 import AddQuestionComp from "../components/AddQuestionComp";
 import Layout from "../components/Layout";
 import FeedSkeleton from "../components/FeedSkeleton";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import prisma from "../lib/prisma";
+import QuestionDetails from "./question/[id]";
+import AnswerModal from "../components/AnswerModal";
 
 type FeedDataType = {
-  id: number;
+  id: string;
   question: string;
   likes: number;
   comments: number;
@@ -17,18 +23,27 @@ type Props = {
 const Home = ({ feed }: Props) => {
   const [FeedData, setFeedData] = useState<FeedDataType[]>(feed);
   const [askQuestion, setAskQuestionValue] = useState<string>("");
+  const [replyIconClicked, onReplyClick] = useState<boolean>(false);
+  const [replyIconFeedData, onReplyIconClickFeedData] =
+    useState<FeedDataType>();
 
+  const onReplyIconClick = (Feed: FeedDataType) => {
+    onReplyIconClickFeedData(Feed);
+    onReplyClick(true);
+  };
   const onClick = () => {
     if (askQuestion.length >= 3) {
       const data: FeedDataType[] = FeedData;
-      data.unshift({
-        id: Math.random(),
-        question: `${askQuestion}`,
-        likes: 0,
-        comments: 0,
-      });
-      setAskQuestionValue("");
-      setFeedData(data);
+      const result = fetch("/api/questions/addNewQuestion", {
+        method: "POST",
+        body: askQuestion,
+      })
+        .then((result) => (result.ok ? result.json() : false))
+        .then((res: FeedDataType) => {
+          data.unshift(res);
+          setAskQuestionValue("");
+          setFeedData(data);
+        });
     }
   };
 
@@ -47,25 +62,34 @@ const Home = ({ feed }: Props) => {
           question={Feed.question}
           likes={Feed.likes}
           comments={Feed.comments}
+          onReplyClick={() => onReplyIconClick(Feed)}
         />
       ))}
+      <AnswerModal
+        replyIconClicked={replyIconClicked}
+        onReplyClick={onReplyClick}
+        questionDetails={replyIconFeedData}
+        clearQuestionDetails={onReplyIconClickFeedData}
+      />
     </Layout>
   );
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps: GetServerSideProps = async () => {
-  const randomNumber = Math.floor(Math.random() * 20 + 1);
+  let feed: FeedDataType[] = [];
+  const result = await prisma.questions.findMany({
+    orderBy: { created_at: "desc" },
+  });
+  console.log(result);
+  feed = result.map((result) => {
+    return {
+      id: result.QuestionID,
+      question: result.Question,
+      likes: result.NoOfLikes,
+      comments: result.NoOfComments,
+    };
+  });
 
-  const feed: FeedDataType[] = [];
-  for (let i = 0; i < randomNumber; i++) {
-    feed.push({
-      id: i,
-      question: `What is Projectile?${i}`,
-      likes: i,
-      comments: i,
-    });
-  }
   console.log(feed);
   return { props: { feed } };
 };
