@@ -1,12 +1,13 @@
 import Image from "next/image";
-import React, { FC, useEffect, useState } from "react";
+import React, { useState } from "react";
 import AddQuestionComp from "../AddQuestionComp";
 
 type props = {
   replyIconClicked: boolean;
   onReplyClick(val: boolean): void;
-  questionDetails?: FeedDataType;
-  clearQuestionDetails?(val: FeedDataType): void;
+  questionDetails: FeedDataType | void;
+  clearQuestionDetails(val?: FeedDataType): void;
+  setUpdatedPost(val: FeedDataType): void;
 };
 type FeedDataType = {
   id: string;
@@ -20,6 +21,7 @@ const AnswerModal = ({
   onReplyClick,
   clearQuestionDetails,
   questionDetails,
+  setUpdatedPost,
 }: props) => {
   const [answer, addAnswer] = useState<string>("");
 
@@ -29,11 +31,16 @@ const AnswerModal = ({
       const result = await fetch("/api/Comments/addNewComment", {
         method: "POST",
         body: JSON.stringify({
-          QuestionID: questionDetails.id,
+          QuestionID: questionDetails ? questionDetails.id : "",
           Comment: answer,
         }),
       });
       if (result.ok) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const finalResult: FeedDataType = await result.json();
+        console.log("Updated Data");
+        console.log(finalResult);
+        setUpdatedPost(finalResult);
         onClose();
       }
     }
@@ -65,7 +72,9 @@ const AnswerModal = ({
                   height={100}
                 />
               </div>
-              <div id="question">{questionDetails.question}</div>
+              <div id="question">
+                {questionDetails ? questionDetails.question : ""}
+              </div>
             </div>
 
             <AddQuestionComp

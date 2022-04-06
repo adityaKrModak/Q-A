@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { GetServerSideProps } from "next";
 import AddQuestionComp from "../components/AddQuestionComp";
 import Layout from "../components/Layout";
@@ -25,7 +22,17 @@ const Home = ({ feed }: Props) => {
   const [askQuestion, setAskQuestionValue] = useState<string>("");
   const [replyIconClicked, onReplyClick] = useState<boolean>(false);
   const [replyIconFeedData, onReplyIconClickFeedData] =
-    useState<FeedDataType>();
+    useState<FeedDataType | void>();
+  const [updatedPost, setUpdatedPost] = useState<FeedDataType | void>();
+
+  useEffect(() => {
+    if (updatedPost) {
+      const newData = FeedData.map((element) =>
+        element.id == updatedPost.id ? updatedPost : element
+      );
+      setFeedData(newData);
+    }
+  }, [updatedPost]);
 
   const onReplyIconClick = (Feed: FeedDataType) => {
     onReplyIconClickFeedData(Feed);
@@ -70,6 +77,7 @@ const Home = ({ feed }: Props) => {
         onReplyClick={onReplyClick}
         questionDetails={replyIconFeedData}
         clearQuestionDetails={onReplyIconClickFeedData}
+        setUpdatedPost={setUpdatedPost}
       />
     </Layout>
   );

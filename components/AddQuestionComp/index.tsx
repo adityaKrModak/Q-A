@@ -5,7 +5,7 @@ import TextArea from "../Common/Textarea";
 interface Props {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onClick?: () => void;
+  onClick?: () => Promise<void> | void;
   children?: ReactNode;
 }
 
