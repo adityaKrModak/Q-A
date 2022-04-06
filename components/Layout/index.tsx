@@ -9,7 +9,7 @@ const Layout: React.FC<props> = ({ children }) => {
   return (
     <div className="flex-col">
       <Header />
-      <div className="flex place-start">
+      <div className="flex md:place-content-start place-content-center">
         <div
           id="sidebar"
           className="p-0 bg-gray-100 invisible md:visible md:p-24 "

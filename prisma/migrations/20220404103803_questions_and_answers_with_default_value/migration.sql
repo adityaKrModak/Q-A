@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Questions" ALTER COLUMN "UserId" SET DEFAULT E'anonymous',
+ALTER COLUMN "NoOfLikes" SET DEFAULT 0,
+ALTER COLUMN "NoOfComments" SET DEFAULT 0;
