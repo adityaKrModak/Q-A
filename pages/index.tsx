@@ -3,7 +3,7 @@ import AddQuestionComp from "../components/AddQuestionComp";
 import Layout from "../components/Layout";
 import FeedSkeleton from "../components/FeedSkeleton";
 import { useEffect, useState } from "react";
-import prisma from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import QuestionDetails from "./question/[id]";
 import AnswerModal from "../components/AnswerModal";
 
