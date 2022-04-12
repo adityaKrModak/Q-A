@@ -3,8 +3,10 @@ import Image from "next/image";
 import LikeOutline from "../Common/Icons/likeOutline";
 import Reply from "../Common/Icons/reply";
 import CommentIcon from "../Common/Icons/commentIcon";
+import Link from "next/link";
 
 interface FeedData {
+  id: string;
   imgSrc?: string;
   name?: string;
   question: string;
@@ -12,7 +14,8 @@ interface FeedData {
   comments: number;
   onReplyClick?(): void;
 }
-function FeedSkeleton({
+function QuestionLayout({
+  id,
   name,
   question,
   likes,
@@ -40,7 +43,11 @@ function FeedSkeleton({
           <LikeOutline className="m-2" />
           {likes}
           <Reply className="m-2" onClick={onReplyClick} />
-          <CommentIcon className="m-2" />
+          <Link href={`/question/${id}`}>
+            <a>
+              <CommentIcon className="m-2" />
+            </a>
+          </Link>
           {comments}
         </div>
       </div>
@@ -48,4 +55,4 @@ function FeedSkeleton({
   );
 }
 
-export default FeedSkeleton;
+export default QuestionLayout;

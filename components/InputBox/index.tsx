@@ -9,7 +9,7 @@ interface Props {
   children?: ReactNode;
 }
 
-export default function AddQuestionComp({
+export default function InputBox({
   onChange,
   value,
   onClick,

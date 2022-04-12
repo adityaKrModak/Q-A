@@ -4,7 +4,15 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      lobster: ["Lobster", "cursive"],
+      cormorant: ['"Cormorant Garamond"', "serif"],
+    },
+    extend: {
+      backgroundImage: {
+        "home-background": "url('/img/home-background.jpg')",
+      },
+    },
   },
   plugins: [],
 };
