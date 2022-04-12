@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
@@ -18,8 +16,12 @@ type QuestionsType = {
   created_at?: Date | string;
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const question = req.body;
+interface ExtendedNextApiRequest extends NextApiRequest {
+  body: string;
+}
+
+const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const question = req.body as ExtendedNextApiRequest;
 
   const result = await prisma.questions.create({
     data: { Question: String(question) },
@@ -33,3 +35,4 @@ export default async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   };
   res.status(200).json(finalResult);
 };
+export default handler;

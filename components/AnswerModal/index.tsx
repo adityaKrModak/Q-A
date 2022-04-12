@@ -1,9 +1,9 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import AddQuestionComp from "../AddQuestionComp";
+import InputBox from "../InputBox";
 
 type props = {
-  replyIconClicked: boolean;
+  isReplyIconEnabled: boolean;
   onReplyClick(val: boolean): void;
   questionDetails: FeedDataType | void;
   clearQuestionDetails(val?: FeedDataType): void;
@@ -17,7 +17,7 @@ type FeedDataType = {
 };
 
 const AnswerModal = ({
-  replyIconClicked,
+  isReplyIconEnabled,
   onReplyClick,
   clearQuestionDetails,
   questionDetails,
@@ -28,7 +28,7 @@ const AnswerModal = ({
   const onClick = async () => {
     if (answer.length >= 3) {
       console.log("checking");
-      const result = await fetch("/api/Comments/addNewComment", {
+      const result = await fetch("/api/Comments/addComment", {
         method: "POST",
         body: JSON.stringify({
           QuestionID: questionDetails ? questionDetails.id : "",
@@ -36,8 +36,7 @@ const AnswerModal = ({
         }),
       });
       if (result.ok) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const finalResult: FeedDataType = await result.json();
+        const finalResult = (await result.json()) as FeedDataType;
         console.log("Updated Data");
         console.log(finalResult);
         setUpdatedPost(finalResult);
@@ -52,7 +51,7 @@ const AnswerModal = ({
   };
   return (
     <>
-      {replyIconClicked && (
+      {isReplyIconEnabled && (
         <div
           id="modal"
           className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4"
@@ -77,14 +76,14 @@ const AnswerModal = ({
               </div>
             </div>
 
-            <AddQuestionComp
+            <InputBox
               onClick={onClick}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void =>
                 addAnswer(e.target.value)
               }
             >
               Answer
-            </AddQuestionComp>
+            </InputBox>
             <div className="px-4 py-2 border-t border-t-gray-500 flex justify-end items-center space-x-4">
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"

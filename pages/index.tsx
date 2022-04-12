@@ -1,105 +1,28 @@
-import type { GetServerSideProps } from "next";
-import AddQuestionComp from "../components/AddQuestionComp";
+import Image from "next/image";
+import React from "react";
+import SearchBar from "../components/Common/SearchBar";
 import Layout from "../components/Layout";
-import FeedSkeleton from "../components/FeedSkeleton";
-import { useEffect, useState } from "react";
-import { prisma } from "../lib/prisma";
-import QuestionDetails from "./question/[id]";
-import AnswerModal from "../components/AnswerModal";
+import homeBackground from "../public/img/home-background.jpg";
 
-type FeedDataType = {
-  id: string;
-  question: string;
-  likes: number;
-  comments: number;
-};
-type Props = {
-  feed: FeedDataType[];
-};
-
-const Home = ({ feed }: Props) => {
-  const [FeedData, setFeedData] = useState<FeedDataType[]>(feed);
-  const [askQuestion, setAskQuestionValue] = useState<string>("");
-  const [replyIconClicked, onReplyClick] = useState<boolean>(false);
-  const [replyIconFeedData, onReplyIconClickFeedData] =
-    useState<FeedDataType | void>();
-  const [updatedPost, setUpdatedPost] = useState<FeedDataType | void>();
-
-  useEffect(() => {
-    if (updatedPost) {
-      const newData = FeedData.map((element) =>
-        element.id == updatedPost.id ? updatedPost : element
-      );
-      setFeedData(newData);
-    }
-  }, [updatedPost]);
-
-  const onReplyIconClick = (Feed: FeedDataType) => {
-    onReplyIconClickFeedData(Feed);
-    onReplyClick(true);
-  };
-  const onClick = () => {
-    if (askQuestion.length >= 3) {
-      const data: FeedDataType[] = FeedData;
-      const result = fetch("/api/questions/addNewQuestion", {
-        method: "POST",
-        body: askQuestion,
-      })
-        .then((result) => (result.ok ? result.json() : false))
-        .then((res: FeedDataType) => {
-          data.unshift(res);
-          setAskQuestionValue("");
-          setFeedData(data);
-        });
-    }
-  };
-
+const LandingPage = () => {
   return (
-    <Layout>
-      <AddQuestionComp
-        value={askQuestion}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void =>
-          setAskQuestionValue(e.target.value)
-        }
-        onClick={onClick}
-      />
-      {FeedData.map((Feed: FeedDataType) => (
-        <FeedSkeleton
-          key={Feed.id}
-          question={Feed.question}
-          likes={Feed.likes}
-          comments={Feed.comments}
-          onReplyClick={() => onReplyIconClick(Feed)}
-        />
-      ))}
-      <AnswerModal
-        replyIconClicked={replyIconClicked}
-        onReplyClick={onReplyClick}
-        questionDetails={replyIconFeedData}
-        clearQuestionDetails={onReplyIconClickFeedData}
-        setUpdatedPost={setUpdatedPost}
-      />
+    <Layout sidebar={false}>
+      <div className="relative">
+        <Image className="-z-10" src={homeBackground} alt="backgroundImage" />
+        <div className="absolute top-10 origin-center w-full ">
+          <h1 className="text-center font-cormorant font-extrabold text-3xl md:text-5xl lg:text-7xl break-words">
+            {" "}
+            Asking Questions
+          </h1>
+          <h1 className="text-center font-cormorant font-extrabold text-xl md:text-5xl lg:text-7xl break-words">
+            {" "}
+            Important To Your learning
+          </h1>
+          <SearchBar />
+        </div>
+      </div>
     </Layout>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  let feed: FeedDataType[] = [];
-  const result = await prisma.questions.findMany({
-    orderBy: { created_at: "desc" },
-  });
-  console.log(result);
-  feed = result.map((result) => {
-    return {
-      id: result.QuestionID,
-      question: result.Question,
-      likes: result.NoOfLikes,
-      comments: result.NoOfComments,
-    };
-  });
-
-  console.log(feed);
-  return { props: { feed } };
-};
-
-export default Home;
+export default LandingPage;
