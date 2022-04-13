@@ -14,6 +14,7 @@ type FeedDataType = {
   question: string;
   likes: number;
   comments: number;
+  date: Date;
 };
 
 const AnswerModal = ({

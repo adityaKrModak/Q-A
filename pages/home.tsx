@@ -10,6 +10,7 @@ type FeedDataType = {
   question: string;
   likes: number;
   comments: number;
+  date: Date;
 };
 type Props = {
   feed: FeedDataType[];
@@ -49,6 +50,7 @@ const Home = ({ feed }: Props) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const feed = await getQuestions();
+
   return { props: { feed } };
 };
 

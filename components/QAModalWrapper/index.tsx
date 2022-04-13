@@ -7,6 +7,7 @@ type FeedDataType = {
   question: string;
   likes: number;
   comments: number;
+  date: Date;
 };
 type Props = {
   FeedData: FeedDataType[];
@@ -40,6 +41,7 @@ const QAModalWrapper = ({ FeedData, setFeedData }: Props) => {
           question={Feed.question}
           likes={Feed.likes}
           comments={Feed.comments}
+          date={Feed.date}
           onReplyClick={() => onReplyIconClick(Feed)}
         />
       ))}

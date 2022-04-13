@@ -11,6 +11,7 @@ const getQuestions = async () => {
       question: el.Question,
       likes: el.NoOfLikes,
       comments: el.NoOfComments,
+      date: el.created_at.toString(),
     };
   });
 };
