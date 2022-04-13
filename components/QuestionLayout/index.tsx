@@ -31,7 +31,7 @@ function QuestionLayout({
   return (
     <div className="flex border-solid border-gray-50 border  m-3 bg-white max-w-[800px] h-[500px]">
       <div className="m-2 md:m-4 space-y-28 ">
-        <div className="border-4 border-cyan-400 rounded-full p-1 max-h-[80px] max-w-[222px] hover:border-black">
+        <div className="border-4 border-cyan-400 rounded-full p-1  hover:border-black">
           <Image
             id="profilePic"
             src="/profile.png"
