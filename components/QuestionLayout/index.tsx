@@ -7,106 +7,117 @@ import Link from "next/link";
 import Moment from "moment";
 import UpArrow from "../Common/Icons/upArrow";
 import DownArrow from "../Common/Icons/downArrow";
+import { useRouter } from "next/router";
+import "react-quill/dist/quill.snow.css";
+import dynamic from "next/dynamic";
 
-interface FeedData {
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+
+interface FeedType {
   id: string;
   imgSrc?: string;
   name?: string;
   question: string;
   likes: number;
   comments: number;
+  description: string;
   date: Date;
-  onReplyClick?(): void;
+  labels: string[];
 }
-function QuestionLayout({
-  id,
-  name,
-  question,
-  likes,
-  comments,
-  imgSrc,
-  date,
-  onReplyClick,
-}: FeedData) {
+type Props = {
+  Feed: FeedType;
+  answerPage?: boolean;
+};
+function QuestionLayout({ Feed, answerPage = false }: Props) {
   return (
-    <div className="flex border-solid border-gray-50 border  m-3 bg-white max-w-[800px] h-[500px]">
-      <div className="m-2 md:m-4 space-y-28 ">
-        <div className="border-4 border-cyan-400 rounded-full p-1  hover:border-black">
+    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max lg:w-[768px]">
+      <div className="m-2 md:m-4 flex flex-col">
+        <div className="border-4 border-cyan-400 rounded-full pt-1 px-1 hover:border-black mb-2">
           <Image
             id="profilePic"
             src="/profile.png"
             alt="it is not loading"
-            width={222}
-            height={222}
+            width={50}
+            height={50}
           />
         </div>
 
-        <div id="likes" className="text-center w-full">
+        <div
+          id="likes"
+          className="text-center w-full h-max grid place-content-center flex-1  "
+        >
           <UpArrow className=" mx-auto text-gray-500 hover:text-black " />
 
-          <span className="text-gray-500 font-bold text-3xl " id="likes">
-            {likes == 0 ? 444 : likes}
+          <span className="text-gray-500 font-bold text-xl " id="likes">
+            {Feed.likes == 0 ? 444 : Feed.likes}
           </span>
 
           <DownArrow className="mx-auto text-gray-500 hover:text-black " />
         </div>
       </div>
 
-      <div className="flex flex-col justify-evenly ">
+      <div className="flex flex-col justify-evenly w-full ml-2">
         <div className="flex ">
           <div
             id="name"
-            className="font-semibold text-cyan-400 text-xl hover:text-black mr-4  "
+            className="font-semibold text-cyan-400 text-md hover:text-black mr-4 "
           >
             Anonymous
           </div>
-          <span className="mt-1 mr-1 text-gray-400">Asked: </span>
-          <div id="date" className="text-cyan-400 mt-0.5">
-            {Moment(date).format("MMM Do YY")}
+          <span className="mt-1 mr-1 text-gray-400 text-xs">Asked: </span>
+          <div id="date" className="text-cyan-400 mt-1 text-xs">
+            {Moment(Feed.date).format("MMM Do YY")}
           </div>
         </div>
-        <Link href={`/question/${id}`}>
+        <Link href={`/question/${Feed.id}`}>
           <a
             id="question"
-            className="text-3xl font-semibold hover:text-cyan-400"
+            className="text-2xl font-semibold hover:text-cyan-400"
           >
-            {question}
+            {Feed.question}
           </a>
         </Link>
 
-        <p id="desc" className="text-xl text-gray-400">
-          In my local language (Bahasa Indonesia) there are no verb-2 or past
-          tense form as time tracker. So, I often forget to use the past form of
-          verb when speaking english. I saw him last night (correct) I see him
-          last night
-        </p>
-        <div id="labels">
-          <span className="  border-2 border-gray-300 p-1 m-2">
-            <span className="m-1"> default</span>
-          </span>
+        <div id="desc" className=" text-gray-400 my-4 mr-10">
+          {Feed.description}
+          {/* <ReactQuill
+            value={description}
+            readOnly={true}
+            theme={"snow"}
+            modules={{ toolbar: false }}
+          /> */}
         </div>
+        <div id="labels" className="my-4 ">
+          {Feed.labels.map((label) => (
+            <span key={label} className="  border-2 border-gray-300 p-1 mr-2">
+              <span className="p-1"> {label}</span>
+            </span>
+          ))}
+        </div>
+
         <div
           id="icons"
-          className=" flex place-content-between bg-slate-100  p-4 mr-4"
+          className=" flex place-content-between bg-slate-100  p-3 mr-10 my-4 "
         >
-          <Link href={`/question/${id}`}>
+          <Link href={`/question/${Feed.id}`}>
             <a>
               <span className=" flex border-2 border-gray-300 p-1 ">
                 <CommentIcon className="m-2" />
 
-                <span className="mt-1 mr-2"> {comments} Answers</span>
+                <span className="mt-1 mr-2 text-md">
+                  {" "}
+                  {Feed.comments} Answers
+                </span>
               </span>
             </a>
           </Link>
-          <button
-            className="bg-black text-white font-semibold border p-2 px-4 hover:bg-cyan-400"
-            onClick={onReplyClick}
-          >
-            Answer
-          </button>
-          {/* <Reply className="m-2" onClick={onReplyClick} />
-          <LikeOutline /> */}
-          {/* {likes} */}
+          {!answerPage && (
+            <Link href={`/question/${Feed.id}`}>
+              <a className="bg-black text-white font-semibold border p-2 px-4 text-md hover:bg-cyan-400">
+                Answer
+              </a>
+            </Link>
+          )}
         </div>
       </div>
     </div>

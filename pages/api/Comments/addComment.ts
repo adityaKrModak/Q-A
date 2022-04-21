@@ -1,23 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { DeltaOperation } from "quill";
 import { prisma } from "../../../lib/prisma";
-type Data = {
-  QuestionID: string;
-  CommentID: string;
-  UserId: string;
-  Comment: string;
-  NoOfLikes: number;
-  created_at: Date;
-};
-type FeedDataType = {
-  id: string;
-  question: string;
-  likes: number;
-  comments: number;
-};
+
 type reqData = {
   QuestionID: string;
-  Comment: string;
+  Comment: DeltaOperation;
 };
+
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: string;
 }
@@ -30,18 +19,20 @@ const handler = async (req: ExtendedNextApiRequest, res: NextApiResponse) => {
     const response2 = await CommentsIncrement(QuestionID);
     if (response2.ok) {
       console.log(response2);
-      const finalResult: FeedDataType = {
+      const finalResult = {
         id: response2.result.QuestionID,
         question: response2.result.Question,
+        Description: response2.result.Description,
         likes: response2.result.NoOfLikes,
         comments: response2.result.NoOfComments,
+        labels: response2.result.Labels.map((label) => label.LabelName),
       };
       res.status(200).json(finalResult);
     }
   }
 };
 
-async function addNewComment(QuestionID: string, Comment: string) {
+async function addNewComment(QuestionID: string, Comment: DeltaOperation) {
   const response = await prisma.comments.create({
     data: { QuestionID: QuestionID, Comment: Comment },
   });
@@ -61,6 +52,13 @@ async function CommentsIncrement(QuesID: string) {
     data: {
       NoOfComments: {
         increment: 1,
+      },
+    },
+    include: {
+      Labels: {
+        select: {
+          LabelName: true,
+        },
       },
     },
   });
