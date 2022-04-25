@@ -1,57 +1,40 @@
 import type { GetServerSideProps } from "next";
-import InputBox from "../components/InputBox";
 import Layout from "../components/Layout";
-import { useState } from "react";
+import { useReducer } from "react";
 import getQuestions from "./api/questions/getQuestions";
-import QAModalWrapper from "../components/QAModalWrapper";
+import QuestionLayout from "../components/QuestionLayout";
+import { feedReducer } from "../state/reducer";
+import { FeedDataType } from "../state/state";
+import { AppContext } from "../state/context";
+import getLabels from "./api/labels/getLabels";
 
-type FeedDataType = {
-  id: string;
-  question: string;
-  likes: number;
-  comments: number;
-  date: Date;
-};
 type Props = {
   feed: FeedDataType[];
+  labels: string[];
 };
 
-const Home = ({ feed }: Props) => {
-  const [FeedData, setFeedData] = useState<FeedDataType[]>(feed);
-  const [askQuestion, setAskQuestionValue] = useState<string>("");
-
-  const onAskBtnClick = async () => {
-    if (askQuestion.length >= 3) {
-      const data: FeedDataType[] = FeedData;
-      const result = await fetch("/api/questions/addQuestion", {
-        method: "POST",
-        body: askQuestion,
-      });
-      const updatedData = (await result.json()) as FeedDataType;
-      data.unshift(updatedData);
-      setAskQuestionValue("");
-      setFeedData(data);
-    }
-  };
+const Home = ({ feed, labels }: Props) => {
+  const [state, dispatch] = useReducer(feedReducer, {
+    FeedData: feed,
+    Labels: labels,
+  });
 
   return (
-    <Layout>
-      <InputBox
-        value={askQuestion}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>): void =>
-          setAskQuestionValue(e.target.value)
-        }
-        onClick={onAskBtnClick}
-      />
-      <QAModalWrapper FeedData={FeedData} setFeedData={setFeedData} />
-    </Layout>
+    <AppContext.Provider value={{ state, dispatch }}>
+      <Layout>
+        {state.FeedData.map((Feed: FeedDataType) => (
+          <QuestionLayout key={Feed.id} Feed={Feed} />
+        ))}
+      </Layout>
+    </AppContext.Provider>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const feed = await getQuestions();
+  const labels = await getLabels();
 
-  return { props: { feed } };
+  return { props: { feed, labels } };
 };
 
 export default Home;

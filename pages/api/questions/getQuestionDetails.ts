@@ -5,6 +5,13 @@ export const getQuestionDetails = async (id: string) => {
     where: {
       QuestionID: id,
     },
+    include: {
+      Labels: {
+        select: {
+          LabelName: true,
+        },
+      },
+    },
   });
   if (questionDetails === null) {
     return {};
@@ -12,8 +19,10 @@ export const getQuestionDetails = async (id: string) => {
     return {
       id: questionDetails.QuestionID,
       question: questionDetails.Question,
+      description: questionDetails.Description,
       likes: questionDetails.NoOfLikes,
       comments: questionDetails.NoOfComments,
+      labels: questionDetails.Labels.map((label) => label.LabelName),
     };
   }
 };

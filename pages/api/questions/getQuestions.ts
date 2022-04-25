@@ -3,16 +3,23 @@ import { prisma } from "../../../lib/prisma";
 const getQuestions = async () => {
   const result = await prisma.questions.findMany({
     orderBy: { created_at: "desc" },
+    include: {
+      Labels: {
+        select: {
+          LabelName: true,
+        },
+      },
+    },
   });
   console.log(result);
-  return result.map((el) => {
-    return {
-      id: el.QuestionID,
-      question: el.Question,
-      likes: el.NoOfLikes,
-      comments: el.NoOfComments,
-      date: el.created_at.toString(),
-    };
-  });
+  return result.map((el) => ({
+    id: el.QuestionID,
+    question: el.Question,
+    likes: el.NoOfLikes,
+    comments: el.NoOfComments,
+    description: el.Description,
+    date: el.created_at.toString(),
+    labels: el.Labels.map((label) => label.LabelName),
+  }));
 };
 export default getQuestions;

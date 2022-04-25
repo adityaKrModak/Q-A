@@ -15,15 +15,24 @@ model Questions {
   QuestionID String @id @default(uuid())
   UserId String @default("anonymous")
   Question String
+  Description String @default("No description")
   NoOfLikes Int @default(0)
   NoOfComments Int @default(0)
   created_at DateTime @default(now())
+  Labels Label[] 
 }
 model Comments {
   QuestionID String
   CommentID String @id @default(uuid())
+  Comment Json
   UserId String @default("anonymous")
-  Comment String
+  UserName String @default("anonymous")
   NoOfLikes Int @default(0)
   created_at DateTime @default(now())
+}
+
+model Label {
+  LabelID Int @id @default(autoincrement())
+  LabelName String @unique
+  Questions Questions[] 
 }

@@ -6,7 +6,7 @@ import homeBackground from "../public/img/home-background.jpg";
 
 const LandingPage = () => {
   return (
-    <Layout sidebar={false}>
+    <Layout hideSideBars={true}>
       <div className="relative">
         <Image className="-z-10" src={homeBackground} alt="backgroundImage" />
         <div className="absolute top-10 origin-center w-full ">

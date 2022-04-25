@@ -1,3 +1,4 @@
+import { DeltaOperation } from "quill";
 import { prisma } from "../../../../lib/prisma";
 
 export const getComments = async (id: string) => {
@@ -7,7 +8,7 @@ export const getComments = async (id: string) => {
   });
   return comments.map((val) => ({
     id: val.CommentID,
-    comment: val.Comment,
+    comment: val.Comment as DeltaOperation,
     likes: val.NoOfLikes,
   }));
 };
