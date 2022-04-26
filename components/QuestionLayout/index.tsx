@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { FeedDataType } from "../../state/state";
+import moment from "moment";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -55,7 +56,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
           </div>
           <span className="mt-1 mr-1 text-gray-400 text-xs">Asked: </span>
           <div id="date" className="text-cyan-400 mt-1 text-xs">
-            {/* {moment(Feed.date).format("MMM Do YY")} */}
+            {moment(Feed.date).format("MMM Do YY")}
           </div>
         </div>
         <Link href={`/question/${Feed.id}`}>

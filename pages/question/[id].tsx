@@ -26,7 +26,7 @@ const FeedDetails = ({ question, comments, labels }: Props) => {
     Labels: labels,
   });
   const [QuestionDetail, updateQuestionDetail] = useState(question);
-  const [commentDetail, updateComments] = useState(comments ?? []);
+  const [commentDetail, updateComments] = useState(comments);
   const [QuillValue, setQuillValue] = useState<string>("");
   const [textContent, setTextContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);

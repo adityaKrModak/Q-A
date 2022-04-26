@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import UpArrow from "../Common/Icons/upArrow";
 import DownArrow from "../Common/Icons/downArrow";
 import { CommentType } from "../../state/state";
+import moment from "moment";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -32,7 +33,7 @@ const Comment = ({ comment, likes, date }: CommentType) => {
           <span className="mt-1 mr-1 text-gray-400 text-xs">
             Added an answer on{" "}
             <span id="date" className="text-cyan-400 mt-1 text-xs">
-              {/* {moment(date).format("MMM Do YY")} */}
+              {moment(date).format("MMM Do YY")}
             </span>
           </span>
 
