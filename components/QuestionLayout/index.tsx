@@ -1,31 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import LikeOutline from "../Common/Icons/likeOutline";
 import Reply from "../Common/Icons/reply";
 import CommentIcon from "../Common/Icons/commentIcon";
 import Link from "next/link";
-import Moment from "moment";
 import UpArrow from "../Common/Icons/upArrow";
 import DownArrow from "../Common/Icons/downArrow";
 import { useRouter } from "next/router";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
+import { FeedDataType } from "../../state/state";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-interface FeedType {
-  id: string;
-  imgSrc?: string;
-  name?: string;
-  question: string;
-  likes: number;
-  comments: number;
-  description: string;
-  date: Date;
-  labels: string[];
-}
 type Props = {
-  Feed: FeedType;
+  Feed: FeedDataType;
   answerPage?: boolean;
 };
 function QuestionLayout({ Feed, answerPage = false }: Props) {
@@ -66,7 +55,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
           </div>
           <span className="mt-1 mr-1 text-gray-400 text-xs">Asked: </span>
           <div id="date" className="text-cyan-400 mt-1 text-xs">
-            {Moment(Feed.date).format("MMM Do YY")}
+            {/* {moment(Feed.date).format("MMM Do YY")} */}
           </div>
         </div>
         <Link href={`/question/${Feed.id}`}>
@@ -78,14 +67,17 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
           </a>
         </Link>
 
-        <div id="desc" className=" text-gray-400 my-4 mr-10">
-          {Feed.description}
-          {/* <ReactQuill
-            value={description}
+        <div id="desc" className=" text-gray-400 text-xl my-4 -ml-4">
+          {/* {Feed.description} */}
+          <ReactQuill
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+            value={Feed.description}
             readOnly={true}
-            theme={"snow"}
+            theme={"bubble"}
+            style={{ fontSize: "120px" }}
             modules={{ toolbar: false }}
-          /> */}
+          />
         </div>
         <div id="labels" className="my-4 ">
           {Feed.labels.map((label) => (

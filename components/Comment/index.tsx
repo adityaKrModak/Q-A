@@ -1,21 +1,14 @@
 import Image from "next/image";
 import React from "react";
-import LikeOutline from "../Common/Icons/likeOutline";
 import dynamic from "next/dynamic";
-
 import "react-quill/dist/quill.snow.css";
 import UpArrow from "../Common/Icons/upArrow";
 import DownArrow from "../Common/Icons/downArrow";
-import Delta from "quill";
+import { CommentType } from "../../state/state";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-interface Props {
-  comment: Delta;
-  likes: number;
-}
-
-const Comment = ({ comment, likes }: Props) => {
+const Comment = ({ comment, likes, date }: CommentType) => {
   return (
     <>
       <div className="flex border-solid border-gray-50 border  mx-3 mt-7 mb-2 bg-white max-w-[1000px] max-h-max">
@@ -38,13 +31,19 @@ const Comment = ({ comment, likes }: Props) => {
           </div>
           <span className="mt-1 mr-1 text-gray-400 text-xs">
             Added an answer on{" "}
+            <span id="date" className="text-cyan-400 mt-1 text-xs">
+              {/* {moment(date).format("MMM Do YY")} */}
+            </span>
           </span>
-          <div id="date" className="text-cyan-400 mt-1 text-xs">
-            {/* {Moment(date).format("MMM Do YY")} */}
-          </div>
 
           <div id="desc" className="-ml-3 -mb-8">
-            <ReactQuill theme="bubble" readOnly={true} value={comment} />
+            <ReactQuill
+              theme="bubble"
+              readOnly={true}
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              //@ts-ignore
+              value={comment}
+            />
           </div>
           <div id="likeAndShare" className="flex mb-2">
             <UpArrow className="  text-gray-500 hover:text-black mt-1 mr-2 " />
@@ -55,7 +54,7 @@ const Comment = ({ comment, likes }: Props) => {
 
             <DownArrow className=" text-gray-500 hover:text-black mt-1 mr-2" />
             <span className=" border-r border-slate-300"></span>
-            <span className="mx-2">share</span>
+            <span className="mx-2">Share</span>
           </div>
         </div>
       </div>

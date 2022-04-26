@@ -15,7 +15,7 @@ model Questions {
   QuestionID String @id @default(uuid())
   UserId String @default("anonymous")
   Question String
-  Description String @default("No description")
+  Description Json 
   NoOfLikes Int @default(0)
   NoOfComments Int @default(0)
   created_at DateTime @default(now())

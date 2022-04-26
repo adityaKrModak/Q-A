@@ -5,44 +5,49 @@ import dynamic from "next/dynamic";
 import { FeedDataType } from "../../state/state";
 import { AppContext } from "../../state/context";
 import { ActionType } from "../../state/action";
+import Editor from "../Editor";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 type Props = {
   setIsModalOpen(val: boolean): void;
 };
+
 const AskQuestionModal = ({ setIsModalOpen }: Props) => {
   const { dispatch } = useContext(AppContext);
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState<string[]>([]);
+  const [QuillValue, setQuillValue] = useState<string>("");
+  const [textContent, setTextContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const onButtonClick = () => {
-    console.log("clicked");
-    setIsLoading(true);
+  const onPostClick = () => {
     void (async function () {
-      if (title.length >= 3 && description.length >= 10 && labels.length >= 1) {
-        const messageBody = {
-          question: title,
-          description: description,
-          labels: labels,
-        };
-        const resp = await fetch("/api/questions/addQuestion", {
+      setIsLoading(true);
+      if (title.length >= 5 && textContent.length >= 5 && labels.length >= 0) {
+        setIsLoading(true);
+        const response = await fetch(`/api/questions/addQuestion`, {
           method: "POST",
-          body: JSON.stringify(messageBody),
+          body: JSON.stringify({
+            question: title,
+            description: QuillValue,
+            labels: labels,
+          }),
         });
-
-        const newQuestion = (await resp.json()) as FeedDataType;
-        dispatch({ type: ActionType.AddQuestion, payload: newQuestion });
-        setIsModalOpen(false);
-        setIsLoading(false);
+        if (response.ok) {
+          const question = (await response.json()) as FeedDataType;
+          dispatch({ type: ActionType.AddQuestion, payload: question });
+          setIsLoading(false);
+          setIsModalOpen(false);
+        }
       }
     })();
   };
+
   return (
     <div
       id="modal"
-      className="  fixed z-50 inset-0 bg-gray-900 bg-opacity-60 h-full w-full overflow-y-auto "
+      className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 h-full w-full overflow-y-auto "
     >
       <div className="relative top-5 mx-auto shadow-lg rounded-md bg-white max-w-3xl ">
         <div className="w-full border-b-2 mb-4 border-slate-300">
@@ -72,24 +77,19 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
           >
             Description
           </label>
-          <div className="">
-            <textarea
+          <div className="mx-6 my-4" id="modalEditor">
+            <Editor
+              QuillValue={QuillValue}
+              setQuillValue={setQuillValue}
+              setTextContent={setTextContent}
+            />
+            {/* <textarea
               className="w-2/3 border-2 max-h-max min-h-[60px] m-6 border-gray-300 rounded-lg placeholder:text-xl placeholder: pl-4 placeholder: shadow-lg "
               placeholder="Add a Description"
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
               }}
-            />
-            {/* <ReactQuill
-              value={description}
-              onChange={(value) => {
-                setDescription(value);
-                console.log(value);
-              }}
-              theme="snow"
-              className="w-full shadow-xl rounded-lg min-h-fit"
-              modules={modules}
             /> */}
           </div>
           <label
@@ -125,12 +125,13 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
         </div>
 
         <div className="w-full border-t-2 mb-4 border-slate-300 flex flex-row-reverse ">
-          <button
-            className="rounded-lg px-4 py-2 m-2 text-white bg-cyan-400"
-            onClick={onButtonClick}
+          <div
+            role="button"
+            className="rounded-lg px-4 py-2 m-2 text-white bg-cyan-400 hover:bg-black"
+            onClick={onPostClick}
           >
             {isLoading ? "Loading..." : "Post"}
-          </button>
+          </div>
         </div>
       </div>
     </div>

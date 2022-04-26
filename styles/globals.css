@@ -28,3 +28,11 @@ a {
 #quillRoot .ql-editor {
   min-height: 200px;
 }
+
+#modalEditor .ql-editor {
+  min-height: 100px;
+}
+
+#desc .ql-editor {
+  font-size: larger;
+}

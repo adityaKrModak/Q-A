@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { ActionType } from "../../state/action";
 import { AppContext } from "../../state/context";
@@ -26,10 +27,7 @@ const LeftSideBar = () => {
     })();
   }, [selectedLabel]);
   return (
-    <div
-      id="sidebar"
-      className=" m-2 mt-7 bg-white invisible md:visible max-w-[300px] "
-    >
+    <div id="sidebar" className=" bg-white w-[100%] md:max-w-[300px] ">
       <div id="labels" className="text-center">
         {state.Labels.map((label) => (
           <span
@@ -45,7 +43,9 @@ const LeftSideBar = () => {
                 : "inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white "
             }
           >
-            <span className="p-1"> {label}</span>
+            <Link href="/home">
+              <a className="p-1 hover:cursor-pointer"> {label}</a>
+            </Link>
           </span>
         ))}
       </div>

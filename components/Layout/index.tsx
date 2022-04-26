@@ -13,12 +13,21 @@ const Layout: React.FC<props> = ({ hideSideBars = false, children }) => {
     <div className="flex-col">
       <Header />
       <div className={!hideSideBars ? "bg-slate-100" : ""}>
-        <div className="md:flex md:place-content-center">
-          {!hideSideBars && <LeftSideBar />}
+        <div className="flex flex-col md:flex-row place-content-center">
+          {!hideSideBars && (
+            <div className="m-2 mt-7">
+              {" "}
+              <LeftSideBar />
+            </div>
+          )}
           <div id="main" className="">
             {children}
           </div>
-          {!hideSideBars && <RightSideBar />}
+          {!hideSideBars && (
+            <div className="order-first md:order-last">
+              <RightSideBar />
+            </div>
+          )}
         </div>
       </div>
       <Footer />
