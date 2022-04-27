@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import Comment from "../../components/Comment";
 import Layout from "../../components/Layout";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
@@ -7,12 +7,11 @@ import { getQuestionDetails } from "../api/questions/getQuestionDetails";
 import { getComments } from "../api/Comments/getComments/getComments";
 import { getQIDFromComments } from "../api/getQIDFromComments";
 import QuestionLayout from "../../components/QuestionLayout";
-import { CommentType, FeedDataType, QAState } from "../../state/state";
+import { CommentType, FeedDataType } from "../../state/state";
 import getLabels from "../api/labels/getLabels";
 import { feedReducer } from "../../state/reducer";
 import { AppContext } from "../../state/context";
 import Editor from "../../components/Editor";
-import { Prisma } from "@prisma/client";
 import { ActionType } from "../../state/action";
 
 type Props = {
@@ -49,9 +48,11 @@ const FeedDetails = ({ question, comments, labels }: Props) => {
             CommentData: CommentType
           ];
           console.log(Question);
-          const data = commentDetail;
-          data.unshift(CommentData);
-          updateComments(data);
+          updateComments((prevData) => {
+            const data = prevData;
+            data.unshift(CommentData);
+            return data;
+          });
           setTextContent("");
           setQuillValue("");
           updateQuestionDetail((prevData) => {

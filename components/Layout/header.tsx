@@ -1,12 +1,7 @@
 import React from "react";
-import Head from "next/head";
 import Link from "next/link";
-import HomeIcon from "../Common/Icons/homeIcon";
 
-type props = {
-  //   className: string;
-};
-const Header: React.FC<props> = ({ children }) => {
+const Header: React.FC = () => {
   return (
     <div id="header" className="p-4 bg-white flex z-50">
       <div className="font-lobster text-xl md:text-3xl  flex-1 ml-2 md:ml-10">

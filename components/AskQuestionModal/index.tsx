@@ -1,20 +1,17 @@
 import React, { useContext, useState } from "react";
 import CloseIcon from "../Common/Icons/closeIcon";
 import "react-quill/dist/quill.snow.css";
-import dynamic from "next/dynamic";
 import { FeedDataType } from "../../state/state";
 import { AppContext } from "../../state/context";
 import { ActionType } from "../../state/action";
 import Editor from "../Editor";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 type Props = {
   setIsModalOpen(val: boolean): void;
 };
 
 const AskQuestionModal = ({ setIsModalOpen }: Props) => {
   const { dispatch } = useContext(AppContext);
-  const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState<string[]>([]);
   const [QuillValue, setQuillValue] = useState<string>("");

@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
-import LikeOutline from "../Common/Icons/likeOutline";
-import Reply from "../Common/Icons/reply";
 import CommentIcon from "../Common/Icons/commentIcon";
 import Link from "next/link";
 import UpArrow from "../Common/Icons/upArrow";
 import DownArrow from "../Common/Icons/downArrow";
-import { useRouter } from "next/router";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
 import { FeedDataType } from "../../state/state";
@@ -20,7 +17,7 @@ type Props = {
 };
 function QuestionLayout({ Feed, answerPage = false }: Props) {
   return (
-    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max lg:w-[768px]">
+    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max ">
       <div className="m-2 md:m-4 flex flex-col">
         <div className="border-4 border-cyan-400 rounded-full pt-1 px-1 hover:border-black mb-2">
           <Image

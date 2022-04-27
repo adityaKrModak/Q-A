@@ -1,7 +1,6 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import "react-quill/dist/quill.snow.css";
 import dynamic from "next/dynamic";
-import { Prisma } from "@prisma/client";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const modules = {

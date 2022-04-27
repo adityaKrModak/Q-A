@@ -2,13 +2,12 @@ import React from "react";
 
 type Props = {
   className?: string;
-  onClick?(val: boolean): void;
 };
 const defaults = {
   className: "",
 };
 
-function CommentIcon({ className, onClick }: Props) {
+function CommentIcon({ className }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
