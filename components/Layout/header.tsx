@@ -9,14 +9,14 @@ const Header: React.FC = () => {
       </div>
       <div className="font-serif text-sm md:text-lg font-bold">
         <div className="">
-          <Link href="/home">
+          <Link href="/">
             <a className="mr-5 md:mr-10 hover:font-extrabold hover:text-cyan-400">
               Home
             </a>
           </Link>
-          <Link href="/">
+          <Link href="/question">
             <a className="mr-5 md:mr-10 hover:font-extrabold hover:text-cyan-400">
-              About
+              Questions
             </a>
           </Link>
           <Link href="/">

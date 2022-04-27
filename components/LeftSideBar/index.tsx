@@ -43,7 +43,7 @@ const LeftSideBar = () => {
                 : "inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white "
             }
           >
-            <Link href="/home">
+            <Link href="/question">
               <a className="p-1 hover:cursor-pointer"> {label}</a>
             </Link>
           </span>

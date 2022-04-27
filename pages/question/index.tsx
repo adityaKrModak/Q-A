@@ -1,12 +1,12 @@
 import type { GetServerSideProps } from "next";
-import Layout from "../components/Layout";
+import Layout from "../../components/Layout";
 import { useReducer } from "react";
-import getQuestions from "./api/questions/getQuestions";
-import QuestionLayout from "../components/QuestionLayout";
-import { feedReducer } from "../state/reducer";
-import { FeedDataType } from "../state/state";
-import { AppContext } from "../state/context";
-import getLabels from "./api/labels/getLabels";
+import getQuestions from "../api/questions/getQuestions";
+import QuestionLayout from "../../components/QuestionLayout";
+import { feedReducer } from "../../state/reducer";
+import { FeedDataType } from "../../state/state";
+import { AppContext } from "../../state/context";
+import getLabels from "../api/labels/getLabels";
 
 type Props = {
   feed: FeedDataType[];

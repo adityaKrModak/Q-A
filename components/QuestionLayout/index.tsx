@@ -17,7 +17,7 @@ type Props = {
 };
 function QuestionLayout({ Feed, answerPage = false }: Props) {
   return (
-    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max ">
+    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max lg:min-w-[768px] md:min-w-[472px] ">
       <div className="m-2 md:m-4 flex flex-col">
         <div className="border-4 border-cyan-400 rounded-full pt-1 px-1 hover:border-black mb-2">
           <Image

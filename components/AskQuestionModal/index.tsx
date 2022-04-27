@@ -93,7 +93,7 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
             className="font-semibold text-3xl ml-6 text-gray-500 "
             id="tags"
           >
-            Labels
+            Tags
           </label>
           <input
             className="w-2/3 border-2 h-[60px] m-6 border-gray-300 rounded-lg placeholder:text-xl placeholder: pl-4 shadow-lg"

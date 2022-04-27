@@ -48,11 +48,9 @@ const FeedDetails = ({ question, comments, labels }: Props) => {
             CommentData: CommentType
           ];
           console.log(Question);
-          updateComments((prevData) => {
-            const data = prevData;
-            data.unshift(CommentData);
-            return data;
-          });
+          const data = commentDetail;
+          data.unshift(CommentData);
+          updateComments(data);
           setTextContent("");
           setQuillValue("");
           updateQuestionDetail((prevData) => {
