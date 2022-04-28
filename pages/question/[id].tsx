@@ -85,7 +85,7 @@ const FeedDetails = ({ question, comments, labels }: Props) => {
             </div>
           </div>
         </div>
-        <div className="mb-3">
+        <div className="mb-20">
           {commentDetail.map((element) => (
             <Comment
               key={element.id}

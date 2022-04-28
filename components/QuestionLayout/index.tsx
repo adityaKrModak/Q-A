@@ -17,7 +17,7 @@ type Props = {
 };
 function QuestionLayout({ Feed, answerPage = false }: Props) {
   return (
-    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max lg:min-w-[768px] md:min-w-[472px] ">
+    <div className="flex border-solid border-gray-200 border  mt-7 bg-white max-w-[1000px] max-h-max lg:min-w-[768px] md:min-w-[472px] rounded-lg ">
       <div className="m-2 md:m-4 flex flex-col">
         <div className="border-4 border-cyan-400 rounded-full pt-1 px-1 hover:border-black mb-2">
           <Image
@@ -79,7 +79,10 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
         </div>
         <div id="labels" className="my-4 ">
           {Feed.labels.map((label) => (
-            <span key={label} className="  border-2 border-gray-300 p-1 mr-2">
+            <span
+              key={label}
+              className="  border-2 border-gray-300 p-1 mr-2 rounded-md"
+            >
               <span className="p-1"> {label}</span>
             </span>
           ))}

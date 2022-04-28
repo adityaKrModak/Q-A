@@ -27,7 +27,10 @@ const LeftSideBar = () => {
     })();
   }, [selectedLabel]);
   return (
-    <div id="sidebar" className=" bg-white w-[100%] md:max-w-[300px] ">
+    <div
+      id="sidebar"
+      className=" bg-white w-[100%] md:max-w-[300px] rounded-lg"
+    >
       <div id="labels" className="text-center">
         {state.Labels.map((label) => (
           <span
@@ -39,8 +42,8 @@ const LeftSideBar = () => {
             }
             className={
               selectedLabel == label
-                ? " bg-cyan-400 text-white  inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white "
-                : "inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white "
+                ? " bg-cyan-400 text-white  inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md"
+                : "inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md "
             }
           >
             <Link href="/question">
