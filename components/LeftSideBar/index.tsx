@@ -40,11 +40,8 @@ const LeftSideBar = () => {
                 ? setSelectedLabel("")
                 : setSelectedLabel(label)
             }
-            className={
-              selectedLabel == label
-                ? " bg-cyan-400 text-white  inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md"
-                : "inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md "
-            }
+            className={`inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md
+            ${selectedLabel == label ? " bg-cyan-400 text-white " : ""}`}
           >
             <Link href="/question">
               <a className="p-1 hover:cursor-pointer"> {label}</a>
