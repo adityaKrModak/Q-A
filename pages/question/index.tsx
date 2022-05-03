@@ -13,7 +13,7 @@ type Props = {
   labels: string[];
 };
 
-const Home = ({ feed, labels }: Props) => {
+const Feed = ({ feed, labels }: Props) => {
   const [state, dispatch] = useReducer(feedReducer, {
     FeedData: feed,
     Labels: labels,
@@ -37,4 +37,4 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return { props: { feed, labels } };
 };
 
-export default Home;
+export default Feed;

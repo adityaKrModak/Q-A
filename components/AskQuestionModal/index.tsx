@@ -1,17 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import CloseIcon from "../Common/Icons/closeIcon";
 import "react-quill/dist/quill.snow.css";
 import { FeedDataType } from "../../state/state";
-import { AppContext } from "../../state/context";
-import { ActionType } from "../../state/action";
 import Editor from "../Editor";
+
+interface FormData {
+  title: string;
+  description: string;
+  labels: string[];
+}
 
 type Props = {
   setIsModalOpen(val: boolean): void;
+  saveFormData(val: FormData): Promise<void>;
 };
 
-const AskQuestionModal = ({ setIsModalOpen }: Props) => {
-  const { dispatch } = useContext(AppContext);
+const AskQuestionModal = ({ setIsModalOpen, saveFormData }: Props) => {
   const [title, setTitle] = useState("");
   const [labels, setLabels] = useState<string[]>([]);
   const [QuillValue, setQuillValue] = useState<string>("");
@@ -20,23 +24,28 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
 
   const onPostClick = () => {
     void (async function () {
-      setIsLoading(true);
       if (title.length >= 5 && textContent.length >= 5 && labels.length >= 0) {
         setIsLoading(true);
-        const response = await fetch(`/api/questions/addQuestion`, {
-          method: "POST",
-          body: JSON.stringify({
-            question: title,
-            description: QuillValue,
-            labels: labels,
-          }),
+        // const response = await fetch(`/api/questions/addQuestion`, {
+        //   method: "POST",
+        //   body: JSON.stringify({
+        //     question: title,
+        //     description: QuillValue,
+        //     labels: labels,
+        //   }),
+        // });
+        // if (response.ok) {
+        //   const question = (await response.json()) as FeedDataType;
+        //   dispatch({ type: ActionType.AddQuestion, payload: question });
+        //   setIsLoading(false);
+        //   setIsModalOpen(false);
+        // }
+        await saveFormData({
+          title: title,
+          description: QuillValue,
+          labels: labels,
         });
-        if (response.ok) {
-          const question = (await response.json()) as FeedDataType;
-          dispatch({ type: ActionType.AddQuestion, payload: question });
-          setIsLoading(false);
-          setIsModalOpen(false);
-        }
+        setIsLoading(false);
       }
     })();
   };
@@ -58,29 +67,29 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
         <div className="flex flex-col">
           <label
             className="font-semibold text-3xl ml-6 text-gray-500 "
-            id="title"
+            htmlFor="title"
           >
             Title
           </label>
           <input
+            id="title"
             className="w-2/3 border-2 h-[60px] m-6 border-gray-300 rounded-lg placeholder:text-xl placeholder: pl-4 shadow-lg"
             placeholder="Add a title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <label
-            className="font-semibold text-3xl ml-6 text-gray-500 "
-            id="desc"
-          >
+          <label className="font-semibold text-3xl ml-6 text-gray-500 ">
             Description
-          </label>
-          <div className="mx-6 my-4" id="modalEditor">
-            <Editor
-              QuillValue={QuillValue}
-              setQuillValue={setQuillValue}
-              setTextContent={setTextContent}
-            />
-            {/* <textarea
+            <div
+              className="my-4 text-black text-lg font-normal max-w-[700px]"
+              id="modalEditor"
+            >
+              <Editor
+                QuillValue={QuillValue}
+                setQuillValue={setQuillValue}
+                setTextContent={setTextContent}
+              />
+              {/* <textarea
               className="w-2/3 border-2 max-h-max min-h-[60px] m-6 border-gray-300 rounded-lg placeholder:text-xl placeholder: pl-4 placeholder: shadow-lg "
               placeholder="Add a Description"
               value={description}
@@ -88,14 +97,17 @@ const AskQuestionModal = ({ setIsModalOpen }: Props) => {
                 setDescription(e.target.value);
               }}
             /> */}
-          </div>
+            </div>
+          </label>
+
           <label
             className="font-semibold text-3xl ml-6 text-gray-500 "
-            id="tags"
+            htmlFor="tags"
           >
             Tags
           </label>
           <input
+            id="tags"
             className="w-2/3 border-2 h-[60px] m-6 border-gray-300 rounded-lg placeholder:text-xl placeholder: pl-4 shadow-lg"
             placeholder="Add at least one tag"
             value={labels}

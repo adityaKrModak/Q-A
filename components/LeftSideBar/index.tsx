@@ -8,6 +8,7 @@ const LeftSideBar = () => {
   const { state, dispatch } = useContext(AppContext);
   const [allFeed, setAllFeed] = useState(state.FeedData);
   const [selectedLabel, setSelectedLabel] = useState<string>("");
+
   useEffect(() => {
     void (async function () {
       if (selectedLabel != "") {

@@ -1,8 +1,42 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AskQuestionModal from "../AskQuestionModal";
+import { AppContext } from "../../state/context";
+import { ActionType } from "../../state/action";
+import { FeedDataType } from "../../state/state";
+
+interface FormData {
+  title: string;
+  description: string;
+  labels: string[];
+}
 
 const RightSideBar = () => {
+  const { state, dispatch } = useContext(AppContext);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const saveFormData = async ({ title, description, labels }: FormData) => {
+    const response = await fetch(`/api/questions/addQuestion`, {
+      method: "POST",
+      body: JSON.stringify({
+        question: title,
+        description: description,
+        labels: labels,
+      }),
+    });
+    if (response.ok) {
+      const question = (await response.json()) as FeedDataType;
+      dispatch({ type: ActionType.AddQuestion, payload: question });
+      const newTags: string[] = [];
+      labels.forEach((tag) => !state.Labels.includes(tag) && newTags.push(tag));
+      if (newTags.length > 0) {
+        dispatch({ type: ActionType.UpdateLabels, payload: newTags });
+      }
+
+      setIsModalOpen(false);
+    }
+  };
+
   return (
     <div
       id="rightSideBar"
@@ -16,7 +50,12 @@ const RightSideBar = () => {
           Ask A Question
         </button>
       </div>
-      {isModalOpen && <AskQuestionModal setIsModalOpen={setIsModalOpen} />}
+      {isModalOpen && (
+        <AskQuestionModal
+          setIsModalOpen={setIsModalOpen}
+          saveFormData={saveFormData}
+        />
+      )}
     </div>
   );
 };
