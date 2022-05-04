@@ -56,7 +56,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
             {moment(Feed.date).format("MMM Do YY")}
           </div>
         </div>
-        <Link href={`/question/${Feed.id}`}>
+        <Link href={`/question/${encodeURIComponent(Feed.id)}`}>
           <a
             id="question"
             className="text-2xl font-semibold hover:text-cyan-400"
@@ -83,7 +83,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
               key={label}
               className="  border-2 border-gray-300 p-1 mr-2 rounded-md"
             >
-              <span className="p-1"> {label}</span>
+              <span className="p-1">{label}</span>
             </span>
           ))}
         </div>
@@ -92,7 +92,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
           id="icons"
           className=" flex place-content-between bg-slate-100  p-3 mr-10 my-4 "
         >
-          <Link href={`/question/${Feed.id}`}>
+          <Link href={`/question/${encodeURIComponent(Feed.id)}`}>
             <a>
               <span className=" flex border-2 border-gray-300 p-1 ">
                 <CommentIcon className="m-2" />
@@ -105,7 +105,7 @@ function QuestionLayout({ Feed, answerPage = false }: Props) {
             </a>
           </Link>
           {!answerPage && (
-            <Link href={`/question/${Feed.id}`}>
+            <Link href={`/question/${encodeURIComponent(Feed.id)}`}>
               <a className="bg-black text-white font-semibold border p-2 px-4 text-md hover:bg-cyan-400">
                 Answer
               </a>

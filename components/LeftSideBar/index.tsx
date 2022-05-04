@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { ActionType } from "../../state/action";
 import { AppContext } from "../../state/context";
@@ -7,13 +8,18 @@ import { FeedDataType } from "../../state/state";
 const LeftSideBar = () => {
   const { state, dispatch } = useContext(AppContext);
   const [allFeed, setAllFeed] = useState(state.FeedData);
-  const [selectedLabel, setSelectedLabel] = useState<string>("");
+  // const [selectedLabel, setSelectedLabel] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     void (async function () {
-      if (selectedLabel != "") {
+      if (router.query.tag && router.query.tag != "") {
         const response = await fetch(
-          `/api/labels/filterByLabels/${selectedLabel}`
+          `/api/labels/filterByLabels/${
+            Array.isArray(router.query.tag)
+              ? router.query.tag[0]
+              : router.query.tag
+          }`
         );
         if (response.ok) {
           const filteredFeedData = (await response.json()) as FeedDataType[];
@@ -26,7 +32,7 @@ const LeftSideBar = () => {
         dispatch({ type: ActionType.FilterQuestions, payload: allFeed });
       }
     })();
-  }, [selectedLabel]);
+  }, [router.query]);
   return (
     <div
       id="sidebar"
@@ -37,16 +43,20 @@ const LeftSideBar = () => {
           <span
             key={label}
             onClick={() =>
-              selectedLabel == label
-                ? setSelectedLabel("")
-                : setSelectedLabel(label)
+              void (async function () {
+                if (router.query.tag === label) {
+                  // setSelectedLabel("");
+                  await router.push("/question");
+                } else {
+                  await router.push(`/question?tag=${label}`);
+                  // setSelectedLabel(label);
+                }
+              })()
             }
             className={`inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md
-            ${selectedLabel == label ? " bg-cyan-400 text-white " : ""}`}
+            ${router.query.tag == label ? " bg-cyan-400 text-white " : ""}`}
           >
-            <Link href="/question">
-              <a className="p-1 hover:cursor-pointer"> {label}</a>
-            </Link>
+            <span className="p-1 hover:cursor-pointer"> {label}</span>
           </span>
         ))}
       </div>
