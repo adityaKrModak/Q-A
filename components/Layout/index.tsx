@@ -1,29 +1,33 @@
 import React from "react";
+import LeftSideBar from "../LeftSideBar";
+import RightSideBar from "../RightSideBar";
 import Footer from "./footer";
 import Header from "./header";
 
 type props = {
-  sidebar?: boolean;
-  //   className: string;
+  hideSideBars?: boolean;
 };
-const Layout: React.FC<props> = ({ sidebar = true, children }) => {
+const Layout: React.FC<props> = ({ hideSideBars = false, children }) => {
   return (
-    <div className="flex-col">
+    <>
       <Header />
-      <div className="flex md:place-content-start place-content-center">
-        {sidebar && (
-          <div
-            id="sidebar"
-            className="p-0 bg-gray-100 invisible md:visible md:p-24 "
-          ></div>
+      <div className="flex flex-col md:flex-row place-content-center">
+        {!hideSideBars && (
+          <div className="m-2 mt-7">
+            <LeftSideBar />
+          </div>
         )}
         <div id="main" className="">
           {children}
         </div>
+        {!hideSideBars && (
+          <div className="order-first md:order-last">
+            <RightSideBar />
+          </div>
+        )}
       </div>
-
       <Footer />
-    </div>
+    </>
   );
 };
 

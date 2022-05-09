@@ -1,38 +1,57 @@
+import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../lib/prisma";
 
-type Data = {
-  id: string;
+type RequestBody = {
   question: string;
-  likes: number;
-  comments: number;
+  description: Prisma.InputJsonValue;
+  labels: string[];
 };
-type QuestionsType = {
-  QuestionID?: string;
-  UserId?: string;
-  Question: string;
-  NoOfLikes?: number;
-  NoOfComments?: number;
-  created_at?: Date | string;
-};
-
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: string;
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const question = req.body as ExtendedNextApiRequest;
+const addQuestion = async (
+  req: ExtendedNextApiRequest,
+  res: NextApiResponse
+) => {
+  try {
+    const { question, description, labels } = JSON.parse(
+      req.body
+    ) as RequestBody;
 
-  const result = await prisma.questions.create({
-    data: { Question: String(question) },
-  });
-  console.log(result);
-  const finalResult = {
-    id: result.QuestionID,
-    question: result.Question,
-    likes: result.NoOfLikes,
-    comments: result.NoOfComments,
-  };
-  res.status(200).json(finalResult);
+    const result = await prisma.questions.create({
+      data: {
+        Question: question,
+        Description: description,
+        Labels: {
+          connectOrCreate: labels.map((label) => {
+            return {
+              where: { LabelName: label },
+              create: { LabelName: label },
+            };
+          }),
+        },
+      },
+      include: {
+        Labels: {
+          select: {
+            LabelName: true,
+          },
+        },
+      },
+    });
+    const QuestionDetail = {
+      id: result.QuestionID,
+      question: result.Question,
+      likes: result.NoOfLikes,
+      description: result.Description,
+      comments: result.NoOfComments,
+      labels: result.Labels.map((label) => label.LabelName),
+    };
+    res.status(200).json(QuestionDetail);
+  } catch (error) {
+    console.error(error);
+  }
 };
-export default handler;
+export default addQuestion;

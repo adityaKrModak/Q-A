@@ -1,28 +1,25 @@
+import { Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../lib/prisma";
 
-type Comments = {
-  id: string;
-  comment: string;
-  likes: number;
+const getComments = async (req: NextApiRequest, res: NextApiResponse) => {
+  try {
+    const { qid } = req.query;
+    const questionID = Array.isArray(qid) ? qid[0] : qid;
+    const result = await prisma.comments.findMany({
+      where: { QuestionID: questionID },
+      orderBy: { created_at: "desc" },
+    });
+    console.log(result);
+    const comments = result.map((val) => ({
+      id: val.CommentID,
+      comment: val.Comment as Prisma.InputJsonValue,
+      likes: val.NoOfLikes,
+      date: val.created_at.toString(),
+    }));
+    res.status(200).send(comments);
+  } catch (error) {
+    console.error(error);
+  }
 };
-
-const handler = async (
-  req: NextApiRequest,
-  res: NextApiResponse<Comments[]>
-) => {
-  const { qid } = req.query;
-  const questionID = Array.isArray(qid) ? qid[0] : qid;
-  const comms = await prisma.comments.findMany({
-    where: { QuestionID: questionID },
-    orderBy: { created_at: "desc" },
-  });
-  console.log(comms);
-  const comments = comms.map((val) => ({
-    id: val.CommentID,
-    comment: val.Comment,
-    likes: val.NoOfLikes,
-  }));
-  res.status(200).json(comments);
-};
-export default handler;
+export default getComments;
