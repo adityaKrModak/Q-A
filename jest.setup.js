@@ -11,3 +11,8 @@ jest.mock("next/image", () => ({
     return "Next image stub"; // whatever
   },
 }));
+jest.mock("next/router", () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}));

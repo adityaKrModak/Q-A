@@ -9,16 +9,14 @@ const LeftSideBar = () => {
   const { state, dispatch } = useContext(AppContext);
   const [allFeed, setAllFeed] = useState(state.FeedData);
   // const [selectedLabel, setSelectedLabel] = useState<string>("");
-  const router = useRouter();
+  const { query, push } = useRouter();
 
   useEffect(() => {
     void (async function () {
-      if (router.query.tag && router.query.tag != "") {
+      if (query.tag && query.tag != "") {
         const response = await fetch(
           `/api/labels/filterByLabels/${
-            Array.isArray(router.query.tag)
-              ? router.query.tag[0]
-              : router.query.tag
+            Array.isArray(query.tag) ? query.tag[0] : query.tag
           }`
         );
         if (response.ok) {
@@ -32,7 +30,7 @@ const LeftSideBar = () => {
         dispatch({ type: ActionType.FilterQuestions, payload: allFeed });
       }
     })();
-  }, [router.query]);
+  }, [query]);
   return (
     <div
       id="sidebar"
@@ -44,19 +42,19 @@ const LeftSideBar = () => {
             key={label}
             onClick={() =>
               void (async function () {
-                if (router.query.tag === label) {
+                if (query.tag === label) {
                   // setSelectedLabel("");
-                  await router.push("/question");
+                  await push("/question");
                 } else {
-                  await router.push(`/question?tag=${label}`);
+                  await push(`/question?tag=${label}`);
                   // setSelectedLabel(label);
                 }
               })()
             }
             className={`inline-block border-2 border-gray-300 p-1 m-2 hover:bg-cyan-400 hover:text-white rounded-md
-            ${router.query.tag == label ? " bg-cyan-400 text-white " : ""}`}
+            ${query.tag == label ? " bg-cyan-400 text-white " : ""}`}
           >
-            <span className="p-1 hover:cursor-pointer"> {label}</span>
+            <span className="p-1 hover:cursor-pointer">{label}</span>
           </span>
         ))}
       </div>
