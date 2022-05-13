@@ -9,30 +9,53 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  name String
+  createdAt DateTime @default(now())
+  userQuestions Questions[]
+  userComments Comments[]
+}
 
 model Questions {
-  QuestionID String @id @default(uuid())
-  UserId String @default("anonymous")
-  Question String
-  Description Json 
-  NoOfLikes Int @default(0)
-  NoOfComments Int @default(0)
-  created_at DateTime @default(now())
-  Labels Label[] 
-}
+  questionID String @id @default(uuid())
+  author User @relation(fields:[authorId], references: [id])
+  authorId String
+  question String
+  description Json 
+  noOfLikes Int @default(0)
+  noOfComments Int @default(0)
+  createdAt DateTime @default(now())
+  labels Label[] 
+  comments Comments[]
+  likes Like[] 
+}   
 model Comments {
-  QuestionID String
-  CommentID String @id @default(uuid())
-  Comment Json
-  UserId String @default("anonymous")
-  UserName String @default("anonymous")
-  NoOfLikes Int @default(0)
-  created_at DateTime @default(now())
+  commentID String @id @default(uuid())
+  author User @relation(fields:[authorId], references: [id])
+  authorId String
+  comment Json
+  noOfLikes Int @default(0)
+  createdAt DateTime @default(now())
+  likes Like[]
+  questionID String
+  question Questions @relation(fields:[questionID], references:[questionID]) 
 }
 
 model Label {
-  LabelID Int @id @default(autoincrement())
-  LabelName String @unique
-  Questions Questions[] 
+  labelID Int @id @default(autoincrement())
+  labelName String @unique
+  questions Questions[] 
+}
+
+model Like {
+  id String @id @default(uuid())
+  userId String
+  questionPostId String? 
+  commentPostId String?
+  questions Questions? @relation ( fields:[questionPostId], references:[questionID])
+  comments Comments? @relation( fields:[commentPostId], references:[commentID])
+  createdAt DateTime @default(now())
 }
